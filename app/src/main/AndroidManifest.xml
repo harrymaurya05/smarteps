@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <application
+        android:name=".app.EpsViewerApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="false"
+        android:theme="@style/Theme.EpsViewer"
+        android:usesCleartextTraffic="false">
+
+        <!-- Splash Activity -->
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.EpsViewer.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Home Activity -->
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.EpsViewer">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="application/postscript" />
+                <data android:mimeType="image/eps" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+            </intent-filter>
+        </activity>
+
+        <!-- Viewer Activity -->
+        <activity
+            android:name=".ui.viewer.ViewerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.EpsViewer.FullScreen" />
+
+        <!-- Settings Activity -->
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            android:theme="@style/Theme.EpsViewer" />
+
+        <!-- Premium Activity -->
+        <activity
+            android:name=".ui.premium.PremiumActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            android:theme="@style/Theme.EpsViewer" />
+
+        <!-- Help Activity -->
+        <activity
+            android:name=".ui.help.HelpActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            android:theme="@style/Theme.EpsViewer" />
+
+        <!-- Google Mobile Ads Configuration -->
+        <!-- Using test App ID for development - Replace with your real App ID for production -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+
+        <!-- Providers for file access -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

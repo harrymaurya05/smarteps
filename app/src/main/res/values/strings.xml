@@ -1,0 +1,107 @@
+<resources>
+    <!-- App name and branding -->
+    <string name="app_name">EPS Viewer (Offline)</string>
+    <string name="app_subtitle">Fast EPS Preview &amp; Export</string>
+
+    <!-- Bottom Navigation -->
+    <string name="convert">Convert</string>
+    <string name="viewer">Viewer</string>
+    <string name="profile">Profile</string>
+
+    <!-- Convert Screen -->
+    <string name="convert_title">Convert EPS</string>
+    <string name="convert_subtitle">Select an EPS file to convert</string>
+    <string name="supported_formats">Supports: PNG, JPG, PDF</string>
+
+    <!-- Viewer Screen -->
+    <string name="no_recent_files">No Recent Files</string>
+    <string name="open_files_to_see_history">Open files to see them here</string>
+    <string name="no_files">No Files</string>
+    <string name="refresh">Refresh</string>
+
+    <!-- Profile Screen -->
+    <string name="free_user">Free User</string>
+    <string name="upgrade_to_premium">Upgrade to Premium</string>
+    <string name="premium_features">No ads • High-res export • Batch convert</string>
+    <string name="options">Options</string>
+    <string name="app_version">Version 1.0.0</string>
+
+    <!-- Home screen -->
+    <string name="home_title">EPS Viewer</string>
+    <string name="home_subtitle">Convert EPS files to PNG, JPG, or PDF</string>
+    <string name="open_file">Open EPS File (Offline)</string>
+    <string name="select_eps_file">Select EPS File</string>
+    <string name="choose_file_to_convert">Choose a file to convert</string>
+    <string name="select_file">Select File</string>
+    <string name="recent_files">Recent Files</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="help">Help</string>
+    <string name="settings">Settings</string>
+    <string name="premium">Premium</string>
+    <string name="go_premium">Go Premium</string>
+
+    <!-- Viewer screen -->
+    <string name="viewer_title">EPS Preview</string>
+    <string name="zoom_in">Zoom In</string>
+    <string name="zoom_out">Zoom Out</string>
+    <string name="fit_to_screen">Fit</string>
+    <string name="actual_size">100%</string>
+    <string name="export">Export</string>
+    <string name="file_info">File Info</string>
+    <string name="open_in">Open In…</string>
+
+    <!-- Export dialog -->
+    <string name="export_title">Export EPS</string>
+    <string name="export_png_standard">PNG (Standard 150 DPI)</string>
+    <string name="export_jpg_standard">JPG (Standard 150 DPI)</string>
+    <string name="export_png_hires">PNG (High-Res 300 DPI)</string>
+    <string name="export_jpg_hires">JPG (High-Res 300 DPI)</string>
+    <string name="export_pdf_hires">PDF (High-Res 300 DPI)</string>
+    <string name="export_success">File exported successfully</string>
+    <string name="export_failed">Export failed</string>
+
+    <!-- Premium screen -->
+    <string name="premium_title">Go Premium</string>
+    <string name="premium_subtitle">Unlock all features</string>
+    <string name="premium_description">High-resolution exports, batch conversion, and ad-free experience</string>
+    <string name="monthly_plan">Monthly</string>
+    <string name="monthly_price">$2.99/month</string>
+    <string name="annual_plan">Annual (Most Popular)</string>
+    <string name="annual_price">$19.99/year</string>
+    <string name="lifetime_plan">Lifetime</string>
+    <string name="lifetime_price">$49.99</string>
+    <string name="subscribe_button">Subscribe</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="theme">Theme</string>
+    <string name="default_export_format">Default Export Format</string>
+    <string name="default_export_resolution">Default Resolution</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="about">About</string>
+
+    <!-- Help -->
+    <string name="help_title">Help</string>
+
+    <!-- File info dialog -->
+    <string name="file_name">File Name</string>
+    <string name="file_size">File Size</string>
+    <string name="dimensions">Dimensions</string>
+
+    <!-- Errors and messages -->
+    <string name="error_loading_file">Error loading file</string>
+    <string name="error_rendering">Error rendering preview</string>
+    <string name="no_app_available">No app available to open file</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="loading_eps">Loading EPS file…</string>
+    <string name="rendering_eps">Rendering preview…</string>
+    <string name="parsing_eps">Parsing EPS content…</string>
+    <string name="processing_large_file">Processing large file…</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="loading">Loading…</string>
+    <string name="retry">Retry</string>
+</resources>
