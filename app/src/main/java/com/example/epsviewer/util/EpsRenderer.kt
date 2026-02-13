@@ -9,13 +9,15 @@ import java.io.InputStream
 /**
  * EPS Renderer - Renders EPS files to bitmaps
  *
- * This renderer supports two modes:
- * 1. Ghostscript (preferred): High-quality rendering using native Ghostscript library
- * 2. Built-in (fallback): Basic PostScript command parsing
+ * This renderer uses a multi-tier approach for best results:
+ * 1. Professional PostScript Interpreter - Full PostScript language support (PRODUCTION QUALITY)
+ * 2. Ghostscript (if available) - Industry-standard PostScript interpreter
+ * 3. Basic fallback - Simple visualization for unsupported files
  */
 class EpsRenderer(private val context: Context) {
 
     private val ghostscript: GhostscriptWrapper by lazy { GhostscriptWrapper(context) }
+    private val psInterpreter = PostScriptInterpreter()
 
     /**
      * Render EPS to bitmap
@@ -31,27 +33,44 @@ class EpsRenderer(private val context: Context) {
 
             Timber.d("Rendering EPS to ${width}x${height} bitmap (scale: $scale)")
 
-            // Try Ghostscript first if available
-            if (ghostscript.isAvailable()) {
-                Timber.d("Using Ghostscript for rendering")
-                val gsBitmap = renderWithGhostscript(epsInputStream, boundingBox, scale)
-                if (gsBitmap != null) {
-                    return gsBitmap
-                }
-                Timber.w("Ghostscript rendering failed, falling back to built-in renderer")
-            } else {
-                Timber.d("Ghostscript not available, using built-in renderer")
-            }
-
-            // Fallback: Use built-in renderer
-            // Read EPS content
+            // Read EPS content once
             val epsContent = epsInputStream.bufferedReader().readText()
 
-            // Render the EPS content
+            // Priority 1: Try Professional PostScript Interpreter (BEST FOR MOST FILES)
+            try {
+                Timber.i("Using Professional PostScript Interpreter")
+                val bitmap = psInterpreter.render(epsContent, width, height, boundingBox)
+                Timber.i("Successfully rendered with PostScript Interpreter: ${bitmap.width}x${bitmap.height}")
+                return bitmap
+            } catch (e: Exception) {
+                Timber.w(e, "PostScript Interpreter failed, trying Ghostscript")
+            }
+
+            // Priority 2: Try Ghostscript if available
+            if (ghostscript.isAvailable()) {
+                Timber.d("Attempting render with Ghostscript native library")
+
+                // Write content to temp file for Ghostscript
+                val tempFile = File.createTempFile("eps_", ".eps", context.cacheDir)
+                try {
+                    tempFile.writeText(epsContent)
+                    val gsBitmap = renderWithGhostscript(tempFile.inputStream(), boundingBox, scale)
+                    if (gsBitmap != null) {
+                        Timber.i("Successfully rendered with Ghostscript")
+                        return gsBitmap
+                    }
+                } finally {
+                    tempFile.delete()
+                }
+                Timber.w("Ghostscript rendering failed")
+            }
+
+            // Priority 3: Show informative preview for unsupported content
+            Timber.d("Using fallback preview renderer")
             renderEpsContent(epsContent, width, height, boundingBox)
+
         } catch (e: Exception) {
             Timber.e(e, "Error rendering EPS to bitmap")
-            // Fallback: create error bitmap
             createErrorBitmap(
                 (boundingBox.width * scale).toInt().coerceAtLeast(400),
                 (boundingBox.height * scale).toInt().coerceAtLeast(400)
@@ -688,7 +707,7 @@ class EpsRenderer(private val context: Context) {
         }
 
         return try {
-            Timber.i("Converting EPS to PDF: ${epsFile.name} -> ${outputPdf.name}")
+            Timber.i("Converting EPS to PDF using Ghostscript: ${epsFile.name}")
             val success = ghostscript.convertToPdf(
                 epsFile.absolutePath,
                 outputPdf.absolutePath

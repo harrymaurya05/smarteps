@@ -21,7 +21,9 @@ android {
         // Vector drawable support
         vectorDrawables.useSupportLibrary = true
 
-        // NDK configuration for Ghostscript
+        // NDK configuration for Ghostscript (disabled until libgs.so is added)
+        // Uncomment when you add libgs.so to app/src/main/jniLibs/
+        /*
         ndk {
             abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64"))
         }
@@ -33,6 +35,7 @@ android {
                 arguments("-DANDROID_STL=c++_shared")
             }
         }
+        */
     }
 
     buildTypes {
@@ -69,12 +72,16 @@ android {
     }
 
     // CMake configuration for native code (Ghostscript JNI)
+    // Disabled until libgs.so is added to app/src/main/jniLibs/
+    // Uncomment when you have the Ghostscript native library
+    /*
     externalNativeBuild {
         cmake {
             path("src/main/cpp/CMakeLists.txt")
             version = "3.22.1"
         }
     }
+    */
 
     packaging {
         resources {
