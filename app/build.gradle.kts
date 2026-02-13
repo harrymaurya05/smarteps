@@ -124,6 +124,10 @@ dependencies {
     // Image viewing
     implementation(libs.photoview)
 
+    // PDF/EPS Enhanced Rendering (exclude old support libs to avoid AndroidX conflicts)
+    implementation(libs.pdfium.android) {
+        exclude(group = "com.android.support")
+    }
 
     // Google Play Services
     implementation(libs.google.play.billing)

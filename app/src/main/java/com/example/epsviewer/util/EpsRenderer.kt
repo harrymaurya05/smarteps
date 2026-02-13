@@ -10,14 +10,16 @@ import java.io.InputStream
  * EPS Renderer - Renders EPS files to bitmaps
  *
  * This renderer uses a multi-tier approach for best results:
- * 1. Professional PostScript Interpreter - Full PostScript language support (PRODUCTION QUALITY)
- * 2. Ghostscript (if available) - Industry-standard PostScript interpreter
- * 3. Basic fallback - Simple visualization for unsupported files
+ * 1. Professional PostScript Interpreter - Full PostScript language support (PRIMARY)
+ * 2. PdfiumAndroid - For EPS files with embedded PDF (ENHANCED)
+ * 3. Ghostscript (if available) - Industry-standard PostScript interpreter (OPTIONAL)
+ * 4. Basic fallback - Simple visualization for unsupported files
  */
 class EpsRenderer(private val context: Context) {
 
     private val ghostscript: GhostscriptWrapper by lazy { GhostscriptWrapper(context) }
     private val psInterpreter = PostScriptInterpreter()
+    private val pdfiumRenderer by lazy { PdfiumEpsRenderer(context) }
 
     /**
      * Render EPS to bitmap
@@ -34,6 +36,7 @@ class EpsRenderer(private val context: Context) {
             Timber.d("Rendering EPS to ${width}x${height} bitmap (scale: $scale)")
 
             // Read EPS content once
+            epsInputStream.mark(Int.MAX_VALUE)
             val epsContent = epsInputStream.bufferedReader().readText()
 
             // Priority 1: Try Professional PostScript Interpreter (BEST FOR MOST FILES)
@@ -43,10 +46,22 @@ class EpsRenderer(private val context: Context) {
                 Timber.i("Successfully rendered with PostScript Interpreter: ${bitmap.width}x${bitmap.height}")
                 return bitmap
             } catch (e: Exception) {
-                Timber.w(e, "PostScript Interpreter failed, trying Ghostscript")
+                Timber.w(e, "PostScript Interpreter failed, trying alternative methods")
             }
 
-            // Priority 2: Try Ghostscript if available
+            // Priority 2: Try PdfiumAndroid (for EPS with embedded PDF)
+            try {
+                epsInputStream.reset()
+                val pdfBitmap = pdfiumRenderer.renderToBitmap(epsInputStream, boundingBox, scale)
+                if (pdfBitmap != null) {
+                    Timber.i("Successfully rendered with PdfiumAndroid")
+                    return pdfBitmap
+                }
+            } catch (e: Exception) {
+                Timber.w(e, "Pdfium rendering failed")
+            }
+
+            // Priority 3: Try Ghostscript if available
             if (ghostscript.isAvailable()) {
                 Timber.d("Attempting render with Ghostscript native library")
 
@@ -54,7 +69,9 @@ class EpsRenderer(private val context: Context) {
                 val tempFile = File.createTempFile("eps_", ".eps", context.cacheDir)
                 try {
                     tempFile.writeText(epsContent)
-                    val gsBitmap = renderWithGhostscript(tempFile.inputStream(), boundingBox, scale)
+                    val tempStream = tempFile.inputStream()
+                    val gsBitmap = renderWithGhostscript(tempStream, boundingBox, scale)
+                    tempStream.close()
                     if (gsBitmap != null) {
                         Timber.i("Successfully rendered with Ghostscript")
                         return gsBitmap
@@ -65,7 +82,7 @@ class EpsRenderer(private val context: Context) {
                 Timber.w("Ghostscript rendering failed")
             }
 
-            // Priority 3: Show informative preview for unsupported content
+            // Priority 4: Show informative preview for unsupported content
             Timber.d("Using fallback preview renderer")
             renderEpsContent(epsContent, width, height, boundingBox)
 

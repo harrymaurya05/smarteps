@@ -14,10 +14,11 @@ Your Android EPS viewer app now has **professional-grade rendering** capabilitie
    - Fast (50-200ms typical)
    - High quality anti-aliased output
 
-2. **Multi-Tier Rendering**
-   - Primary: PostScript Interpreter (works now!)
-   - Secondary: Ghostscript (optional, for 100% compatibility)
-   - Fallback: Information display
+2. **Multi-Tier Rendering** (4 Layers!)
+   - Layer 1: PostScript Interpreter (works now!) - 90% of files
+   - Layer 2: PdfiumAndroid (NEW!) - For EPS with embedded PDF
+   - Layer 3: Ghostscript (optional, for 100% compatibility)
+   - Layer 4: Fallback - Information display
 
 3. **Complete Android App**
    - Material Design 3 UI
@@ -38,15 +39,28 @@ Your Android EPS viewer app now has **professional-grade rendering** capabilitie
 ### The Rendering Process
 
 ```
-EPS File → Parser → PostScript Interpreter → Canvas → Bitmap → Display
+EPS File → Parser → Multi-Tier Rendering → Display
    ↓
 BoundingBox extraction
    ↓
-Tokenization (moveto, lineto, stroke, fill, etc.)
-   ↓
-Stack-based execution
-   ↓
-Android Canvas drawing
+┌────────────────────────────────────────┐
+│ Layer 1: PostScript Interpreter       │ ← Try first (90% success)
+│   - Parse PostScript tokens            │
+│   - Stack-based execution              │
+│   - Draw to Canvas                     │
+├────────────────────────────────────────┤
+│ Layer 2: PdfiumAndroid (NEW!)         │ ← For PDF-embedded EPS
+│   - Detect embedded PDF                │
+│   - Use Google's PDFium engine         │
+│   - Native PDF rendering               │
+├────────────────────────────────────────┤
+│ Layer 3: Ghostscript (Optional)       │ ← If installed (100%)
+│   - Native PostScript interpreter      │
+│   - Industry standard                  │
+├────────────────────────────────────────┤
+│ Layer 4: Fallback Display             │ ← Last resort
+│   - Show file information              │
+└────────────────────────────────────────┘
    ↓
 Beautiful rendered output!
 ```

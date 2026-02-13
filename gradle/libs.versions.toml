@@ -9,6 +9,7 @@ hilt = "2.49"
 coroutines = "1.7.3"
 timber = "5.0.1"
 photoview = "2.3.0"
+pdfium = "1.9.0"
 googlePlayBilling = "6.1.0"
 googleMobileAds = "22.6.0"
 gson = "2.10.1"
@@ -37,6 +38,7 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
+pdfium-android = { group = "com.github.barteksc", name = "pdfium-android", version.ref = "pdfium" }
 google-play-billing = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "googlePlayBilling" }
 google-mobile-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googleMobileAds" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
